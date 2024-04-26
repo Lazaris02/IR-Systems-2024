@@ -22,7 +22,7 @@ import java.util.List;
 public class IndexCreation {
     public IndexCreation() throws Exception{
     try {
-        String txt = "docs//";
+        String txt = "docs//documents.txt";
         String indexLocation = ("index"); //the directory our index is stored
 
         Directory dir = FSDirectory.open(Paths.get(indexLocation));
@@ -85,6 +85,7 @@ public class IndexCreation {
     }
 
     public static void main(String[] args){
+        //test if it works so far!
         try {
             IndexCreation indexCreate = new IndexCreation();
         } catch (Exception e){
