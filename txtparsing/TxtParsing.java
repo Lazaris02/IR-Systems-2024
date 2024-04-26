@@ -1,7 +1,6 @@
-package  txtparsing;
+package txtparsing;
 import utils.IO;
 
-import javax.print.Doc;
 import java.util.ArrayList;
 import java.util.List;
 
