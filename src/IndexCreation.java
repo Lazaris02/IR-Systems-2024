@@ -2,8 +2,10 @@ package src;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
+import org.apache.lucene.document.*;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
@@ -20,11 +22,13 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class IndexCreation {
-    public IndexCreation() throws Exception{
-    try {
-        String txt = "docs//documents.txt";
-        String indexLocation = ("index"); //the directory our index is stored
 
+    /**
+     * creates an index for the given .txt file
+     * @param filepath the path of the .txt file
+     * @param indexLocation the location that the index will be stored*/
+    public IndexCreation(String filepath,String indexLocation) {
+    try {
         Directory dir = FSDirectory.open(Paths.get(indexLocation));
         Analyzer analyzer = new EnglishAnalyzer(); //normalizes the documents
 
@@ -40,7 +44,7 @@ public class IndexCreation {
 
         IndexWriter indexWriter = new IndexWriter(dir,config); // our index writer
 
-        List<DocumentData> docs = TxtParsing.parse(txt);
+        List<DocumentData> docs = TxtParsing.parse(filepath);
 
         //for each doc create the Lucene Documents + use index writer
         for(DocumentData d : docs){
@@ -48,6 +52,8 @@ public class IndexCreation {
         }
 
         indexWriter.close();
+
+        System.out.println("\n All the documents succesfully added in Index!");
 
     }catch(IOException e){
         System.out.println(" caught a " + e.getClass() +
@@ -67,7 +73,7 @@ public class IndexCreation {
         try{
             Document doc = new Document();
             //create the fields to store the id and the body of the document
-            StringField id = new StringField("id",d.getId(), Field.Store.YES);
+            StoredField id = new StoredField("id",d.getId());
             doc.add(id);
 
             TextField body = new TextField("body",d.getBody(), Field.Store.NO);
@@ -83,15 +89,5 @@ public class IndexCreation {
             e.printStackTrace();
         }
     }
-
-    public static void main(String[] args){
-        //test if it works so far!
-        try {
-            IndexCreation indexCreate = new IndexCreation();
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
 
 }
