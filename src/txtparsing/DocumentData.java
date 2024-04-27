@@ -10,6 +10,15 @@ public class DocumentData {
         this.body = body;
     }
 
+
+    @Override
+    public String toString(){
+        String ret = "DocData{"
+                + "\n\tId: " + this.id
+                + "\n\tbody: " + this.body;
+        return ret+"\n}";
+    }
+
     /*Setters and Getters*/
 
     public String getId() {
