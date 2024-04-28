@@ -14,20 +14,19 @@ import org.apache.lucene.search.similarities.ClassicSimilarity;
 import org.apache.lucene.store.FSDirectory;
 import src.txtparsing.TxtParsing;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.file.Paths;
 import java.util.List;
 
 public class IndexSearch {
-
+    private final String filepathQ;
     /** this constructor creates indexReader -- used to parse the index
      * and an indexSearcher to search for documents in the index
      * @param indexLocation the directory our index is stored
      * @param fieldName the document fieldname we want to search -- body
      * @param k the number of most relevant documents to be returned*/
-    public IndexSearch(String indexLocation,String fieldName,int k){
+    public IndexSearch(String indexLocation,String fieldName,int k,String filepathQ){
+        this.filepathQ = filepathQ;
         try {
             //the reader gives us access to the index
             IndexReader indexReader = DirectoryReader.open(FSDirectory.open(Paths.get(indexLocation)));
@@ -58,7 +57,7 @@ public class IndexSearch {
             QueryParser parser = new QueryParser(fieldName, analyzer);
 
             //read queries from queries.txt file
-            List<String> queries = TxtParsing.extractQueries("docs//queries.txt");
+            List<String> queries = TxtParsing.extractQueries(filepathQ);
 
             // search the index using the indexSearcher
             for(String q : queries) {
