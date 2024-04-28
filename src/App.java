@@ -14,6 +14,6 @@ public class App {
         String filepathQ = "docs//queries.txt";
         String fieldName = "body";
         int k = 50; // the number of most relevant documents we want per query
-        IndexSearch ourSearch = new IndexSearch(indexLocation,fieldName,k);
+        IndexSearch ourSearch = new IndexSearch(indexLocation,fieldName,k,filepathQ);
     }
 }

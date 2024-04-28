@@ -2,7 +2,6 @@ package src.txtparsing;
 import src.utils.IO;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class TxtParsing{
