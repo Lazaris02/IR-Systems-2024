@@ -1,5 +1,7 @@
 package src;
 
+import src.utils.IO;
+
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.document.Document;
@@ -12,14 +14,19 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.similarities.ClassicSimilarity;
 import org.apache.lucene.store.FSDirectory;
+import src.txtparsing.QueryData;
 import src.txtparsing.TxtParsing;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 
 public class IndexSearch {
     private final String filepathQ;
+    private static final String writeFilePath = "docs//ourResults.txt";
+
+
     /** this constructor creates indexReader -- used to parse the index
      * and an indexSearcher to search for documents in the index
      * @param indexLocation the directory our index is stored
@@ -57,13 +64,19 @@ public class IndexSearch {
             QueryParser parser = new QueryParser(fieldName, analyzer);
 
             //read queries from queries.txt file
-            List<String> queries = TxtParsing.extractQueries(filepathQ);
-
+            List<QueryData> queries = TxtParsing.extractQueries(filepathQ);
             // search the index using the indexSearcher
-            for(String q : queries) {
-                //parse each query according to QueryParser
-                Query query = parser.parse(q);
-                System.out.println("Searching for: " + query.toString(fieldName));
+
+            File file = new File(writeFilePath);
+
+            if(file.exists()){
+                file.delete();
+            } // if the file exists from previous execution it is deleted first.
+
+            for(QueryData q : queries) {
+                //parse each query question according to QueryParser
+                Query query = parser.parse(q.getQueryQuestion());
+                System.out.println("Searching for: " + query.toString(fieldName) + "with id="+q.getQueryId());
 
                 // search the index using the indexSearcher
                 TopDocs results = indexSearcher.search(query, 50);
@@ -71,11 +84,11 @@ public class IndexSearch {
                 long numTotalHits = results.totalHits;
                 System.out.println(numTotalHits + " total matching documents");
 
-                //print and write the results to file
+                //write the results to file -- queries already sorted by queryId
                 for (ScoreDoc hit : hits) {
                     Document hitDoc = indexSearcher.doc(hit.doc);
-                    System.out.println("\tScore "+hit.score +"\tid="+hitDoc.get("id"));
-
+                    IO.writeToFile(q.getQueryId(),hitDoc.get("id"),hit.score,writeFilePath);
+                    //System.out.println("\tScore "+hit.score +"\tid="+hitDoc.get("id"));
                 }
             }
         } catch(Exception e){

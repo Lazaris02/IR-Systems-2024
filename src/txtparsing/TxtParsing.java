@@ -26,14 +26,17 @@ public class TxtParsing{
      * reads the file with the queries and extracts them
      * @param file the filename
      * @return an ArrayList with only the queries*/
-    public static List<String> extractQueries(String file){
+    public static List<QueryData> extractQueries(String file){
         String txt_file = IO.txtToString(file);
         String[] unprocessedQueries = txt_file.split("///");
 
-        List<String> queries = new ArrayList<String>();
+        List<QueryData> queries = new ArrayList<QueryData>();
 
         for(String q : unprocessedQueries){
-            queries.add(q.trim().split("\n")[1]);
+           String[] fullQuery = q.trim().split("\n");
+           System.out.println(fullQuery[0]+"  "+fullQuery[1]); // todo delete this
+           queries.add(new QueryData(fullQuery[0],fullQuery[1]));
+
         }
         System.out.println(queries);
         return queries;

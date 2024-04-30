@@ -1,8 +1,7 @@
 package src.utils;
 
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.Scanner;
 
 public class IO{
@@ -23,4 +22,23 @@ public class IO{
 
     }
 
+    /**
+     * writes the results for each document as a tuple in a file
+     * @param queryId the query we write the results for
+     * @param docId the document the score refers to
+     * @param score how relative the particular document is to the particular query
+     * @param writeFileName the file we write the results in
+     * */
+    public static void writeToFile(String queryId,String docId,float score,String writeFileName){
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(writeFileName,true));
+            //the string we need to write for every result
+            String tuple =queryId.trim()+"\t"+"Q0"+"\t"+docId.trim()+"\t"+score+"\t"+"STANDARD"+"\n";
+            writer.write(tuple);
+            writer.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
