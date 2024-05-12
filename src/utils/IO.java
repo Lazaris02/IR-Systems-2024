@@ -33,7 +33,7 @@ public class IO{
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(writeFileName,true));
             //the string we need to write for every result
-            String tuple =queryId.trim()+"\t"+"Q0"+"\t"+docId.trim()+"\t"+score+"\t"+"STANDARD"+"\n";
+            String tuple =queryId.trim()+"\t"+"Q0"+"\t"+docId.trim()+"\t0"+"\t"+score+"\t"+"STANDARD"+"\n";
             writer.write(tuple);
             writer.close();
 
