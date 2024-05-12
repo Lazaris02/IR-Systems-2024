@@ -34,7 +34,6 @@ public class TxtParsing{
 
         for(String q : unprocessedQueries){
            String[] fullQuery = q.trim().split("\n");
-           System.out.println(fullQuery[0]+"  "+fullQuery[1]); // todo delete this
            queries.add(new QueryData(fullQuery[0],fullQuery[1]));
 
         }
