@@ -1,5 +1,6 @@
 package src;
 
+import org.apache.lucene.search.similarities.Similarity;
 import src.utils.IO;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -25,24 +26,24 @@ import java.util.List;
 public class IndexSearch {
     private final String filepathQ;
     private static final String writeFilePath = "docs//ourResults.txt";
-
+    private final String[] methodNames = {"ClassicSim","B25","LMJ"};
 
     /** this constructor creates indexReader -- used to parse the index
      * and an indexSearcher to search for documents in the index
      * @param indexLocation the directory our index is stored
-     * @param fieldName the document fieldname we want to search -- body
+     * @param fieldName the document field name we want to search -- body
      * @param k the number of most relevant documents to be returned*/
-    public IndexSearch(String indexLocation,String fieldName,int k,String filepathQ){
+    public IndexSearch(String indexLocation, String fieldName, int k, String filepathQ, Similarity similarity,int sim){
         this.filepathQ = filepathQ;
         try {
             //the reader gives us access to the index
             IndexReader indexReader = DirectoryReader.open(FSDirectory.open(Paths.get(indexLocation)));
             IndexSearcher indexSearcher = new IndexSearcher(indexReader);
             //we need the same analyzer and similarity as the index
-            indexSearcher.setSimilarity(new ClassicSimilarity());
+            indexSearcher.setSimilarity(similarity);
 
             //search the index
-            search(indexSearcher,fieldName,k);
+            search(indexSearcher,fieldName,k,sim);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -54,8 +55,9 @@ public class IndexSearch {
      * @param indexSearcher the index searcher to be used
      * @param fieldName the name of the field we want to search --body
      * @param k the number of most relative to be returned
+     * @param sim to get the name of the sim function
      *  */
-    private void search(IndexSearcher indexSearcher, String fieldName,int k){
+    private void search(IndexSearcher indexSearcher, String fieldName,int k,int sim){
         try{
             // define which analyzer to use for the normalization of user's query
             Analyzer analyzer = new EnglishAnalyzer();
@@ -76,7 +78,7 @@ public class IndexSearch {
             for(QueryData q : queries) {
                 //parse each query question according to QueryParser
                 Query query = parser.parse(q.getQueryQuestion());
-                System.out.println("Searching for: " + query.toString(fieldName) + "with id="+q.getQueryId());
+                System.out.println("Searching for: " + query.toString(fieldName) + " with id="+q.getQueryId());
 
                 // search the index using the indexSearcher
                 TopDocs results = indexSearcher.search(query, 50);
@@ -87,8 +89,7 @@ public class IndexSearch {
                 //write the results to file -- queries already sorted by queryId
                 for (ScoreDoc hit : hits) {
                     Document hitDoc = indexSearcher.doc(hit.doc);
-                    IO.writeToFile(q.getQueryId(),hitDoc.get("id"),hit.score,writeFilePath);
-                    //System.out.println("\tScore "+hit.score +"\tid="+hitDoc.get("id"));
+                    IO.writeToFile(q.getQueryId(),hitDoc.get("id"),hit.score,writeFilePath,methodNames[sim]);
                 }
             }
         } catch(Exception e){

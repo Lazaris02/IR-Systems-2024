@@ -8,7 +8,9 @@ import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.search.similarities.BM25Similarity;
 import org.apache.lucene.search.similarities.ClassicSimilarity;
+import org.apache.lucene.search.similarities.LMJelinekMercerSimilarity;
 import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
@@ -24,13 +26,12 @@ public class IndexCreation {
     /**
      * creates an index for the given .txt file
      * @param filepath the path of the .txt file
-     * @param indexLocation the location that the index will be stored*/
-    public IndexCreation(String filepath,String indexLocation) {
+     * @param indexLocation the location that the index will be stored
+     * @param similarity the similarity function we will use*/
+    public IndexCreation(String filepath,String indexLocation,Similarity similarity) {
     try {
         Directory dir = FSDirectory.open(Paths.get(indexLocation));
         Analyzer analyzer = new EnglishAnalyzer(); //normalizes the documents
-
-        Similarity similarity = new ClassicSimilarity(); // our retrieval model
 
         //index writer configuration
         IndexWriterConfig config = new IndexWriterConfig(analyzer);

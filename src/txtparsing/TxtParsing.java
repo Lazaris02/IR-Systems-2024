@@ -37,7 +37,6 @@ public class TxtParsing{
            queries.add(new QueryData(fullQuery[0],fullQuery[1]));
 
         }
-        System.out.println(queries);
         return queries;
 
     }

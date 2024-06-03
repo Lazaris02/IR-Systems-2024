@@ -29,11 +29,11 @@ public class IO{
      * @param score how relative the particular document is to the particular query
      * @param writeFileName the file we write the results in
      * */
-    public static void writeToFile(String queryId,String docId,float score,String writeFileName){
+    public static void writeToFile(String queryId,String docId,float score,String writeFileName,String methodName){
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(writeFileName,true));
             //the string we need to write for every result
-            String tuple =queryId.trim()+"\t"+"Q0"+"\t"+docId.trim()+"\t0"+"\t"+score+"\t"+"STANDARD"+"\n";
+            String tuple =queryId.trim()+"\t"+"Q0"+"\t"+docId.trim()+"\t0"+"\t"+score+"\t"+methodName+"\n";
             writer.write(tuple);
             writer.close();
 
