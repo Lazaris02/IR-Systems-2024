@@ -25,7 +25,7 @@ import java.util.List;
 
 public class IndexSearch {
     private final String filepathQ;
-    private static final String writeFilePath = "docs//ourResults.txt";
+    private  final String writeFilePath;
     private final String[] methodNames = {"ClassicSim","B25","LMJ"};
 
     /** this constructor creates indexReader -- used to parse the index
@@ -35,6 +35,7 @@ public class IndexSearch {
      * @param k the number of most relevant documents to be returned*/
     public IndexSearch(String indexLocation, String fieldName, int k, String filepathQ, Similarity similarity,int sim){
         this.filepathQ = filepathQ;
+        this.writeFilePath = "docs//ourResults_".concat(methodNames[sim]+".txt");
         try {
             //the reader gives us access to the index
             IndexReader indexReader = DirectoryReader.open(FSDirectory.open(Paths.get(indexLocation)));

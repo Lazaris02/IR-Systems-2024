@@ -13,18 +13,20 @@ public class App {
         String filepath = "docs//documents.txt";
         String indexLocation = ("index");
 
-        //decide the similarity function
-        int sim = 0;
-        Similarity similarity = similarityFunction(sim);
 
-        IndexCreation ourIndex = new IndexCreation(filepath,indexLocation,similarity);
 
         //search in the index using queries
 
         String filepathQ = "docs//queries.txt";
         String fieldName = "body";
         int k = 50; // the number of most relevant documents we want per query
-        IndexSearch ourSearch = new IndexSearch(indexLocation,fieldName,k,filepathQ,similarity,sim);
+        //create indexes and search for all the different methods
+        for(int sim=0; sim <3; sim++){
+            Similarity similarity = similarityFunction(sim);
+            IndexCreation ourIndex = new IndexCreation(filepath,indexLocation,similarity);
+            IndexSearch ourSearch = new IndexSearch(indexLocation,fieldName,k,filepathQ,similarity,sim);
+        }
+
     }
     private static Similarity similarityFunction(int sim){
         /*sim == 0 Classic similarity
@@ -34,7 +36,7 @@ public class App {
             return new ClassicSimilarity();
         }
         if(sim == 1){
-            return new BM25Similarity(1.4f,0.76f);
+            return new BM25Similarity(1.2f,0.75f);
         }
 
         if(sim == 2){
